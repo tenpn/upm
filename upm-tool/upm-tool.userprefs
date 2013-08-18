@@ -1,0 +1,35 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="upm-tool.tests/PackageListFacts.cs">
+    <Files>
+      <File FileName="upm-tool/Program.cs" Line="13" Column="1" />
+      <File FileName="upm-tool.tests/Test.cs" Line="12" Column="4" />
+      <File FileName="upm-tool.tests/PackageSearchCommandFacts.cs" Line="8" Column="3" />
+      <File FileName="upm-tool.tests/PackageListFacts.cs" Line="16" Column="2" />
+      <File FileName="upm-tool/PackageList.cs" Line="7" Column="4" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="upm-tool" expanded="True" selected="True" />
+          <Node name="upm-tool.tests" expanded="True">
+            <Node name="References" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
