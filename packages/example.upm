@@ -1,0 +1,26 @@
+# an example UPM file
+
+## yaml-compatible syntax, also looks good rendered as markdown
+
+## mandatory pairs
+
+name: example
+unitypackage: http://www.example.com/example.unitypackage
+version: 0.1.0.0
+summary: |
+  a simple example spec. not executable.
+  multi-line support for summaries, somehow?
+
+## optional pairs
+
+support-email: support@example.com
+support-url: http://support.example.com
+homepage: http://www.example.com
+
+### version strings similar to ruby gems http://docs.rubygems.org/read/chapter/16
+dependencies: 
+  - name: test-framework
+    version: ~> 1.3
+    
+  - name: runtime-asserts
+    version: >= 2.2 
