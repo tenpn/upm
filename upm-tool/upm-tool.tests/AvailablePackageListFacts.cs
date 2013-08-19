@@ -27,20 +27,27 @@ using System;
 using NUnit.Framework;
 using System.Linq;
 using Moq;
+using System.Collections.Generic;
 
 namespace upmtool.tests
 {
 	[TestFixture()]
 	public class AvailablePackageListFacts
 	{
+		Mock<IGithubService> CreateGithubServiceStub(IEnumerable<GithubDirectoryContent> stubPackages) 
+		{
+			var stubGithub = new Mock<IGithubService> ();
+			stubGithub.Setup (gitService => gitService.GetDirectoryContents (It.IsAny<string>()))
+				.Returns (stubPackages);
+			return stubGithub;
+		}
+
 		[Test()]
 		public void AsIEnumerable_NoPackages_EmptyList ()
 		{
-			var emptyGithubRepo = new Mock<IGithubService> ();
-			emptyGithubRepo.Setup (gitService => gitService.GetDirectoryContents (It.IsAny<string>()))
-				.Returns (new GithubDirectoryContent[] { });
+			var emptyGithubRepo = CreateGithubServiceStub (new GithubDirectoryContent[] { }).Object;
 
-			var packageList = new AvailablePackageList(emptyGithubRepo.Object);
+			var packageList = new AvailablePackageList(emptyGithubRepo);
 
 			Assert.AreEqual(packageList.Count(), 0);
 		}
@@ -52,11 +59,10 @@ namespace upmtool.tests
 				Type = "file",
 				Name = "example.upm",
 			};
-			var stubGithub = new Mock<IGithubService> ();
-			stubGithub.Setup (gitService => gitService.GetDirectoryContents (It.IsAny<string>()))
-				.Returns (new GithubDirectoryContent[] { samplePackage });
+			var stubGithub 
+				= CreateGithubServiceStub (new GithubDirectoryContent[] { samplePackage }).Object;
 
-			var packageList = new AvailablePackageList(stubGithub.Object);
+			var packageList = new AvailablePackageList(stubGithub);
 
 			Assert.AreEqual(packageList.Count(), 1);
 		}
