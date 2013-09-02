@@ -91,6 +91,23 @@ namespace upmtool.tests
 
             CollectionAssert.IsEmpty(packageList);
 		}
+
+        // this is good because it means less network traffic
+        [Test]
+        public void IEnumerable_CalledTwice_OnlyCallsToGithubOnce() 
+        {
+            var mockGithub = new Mock<IGithubService> ();
+			mockGithub.Setup(
+                gitService => gitService.GetDirectoryContents(It.IsAny<string>()))
+				.Returns (new GithubDirectoryContent[] { });
+			var packageList = new AvailablePackageList(mockGithub.Object);
+            
+            packageList.GetEnumerator();
+            packageList.GetEnumerator();
+
+            mockGithub.Verify(service => service.GetDirectoryContents(It.IsAny<string>()),
+                              Times.Exactly(1));
+        }
 	}
 }
 

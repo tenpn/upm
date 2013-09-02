@@ -10,22 +10,22 @@ namespace upmtool
 		public AvailablePackageList (IGithubService github)
 		{
 			m_githubService = github;
-		}
 
-		public IEnumerator<PackageDetails> GetEnumerator()
-		{
-			var contents = m_githubService.GetDirectoryContents ("packages");
-			var res = new List<PackageDetails> ();
+            var contents = m_githubService.GetDirectoryContents ("packages");
             var availablePackages = contents.Where(pkg => pkg.Name.ToLower().EndsWith(".upm"));
 
 			foreach (var file in availablePackages) {
                 string packageName = file.Name.Substring(0, file.Name.Length - 4);
-				res.Add (new PackageDetails {
+				m_cachedPackages.Add (new PackageDetails {
                         Name = packageName,
                     });
 			}
-			return res.GetEnumerator();
 		}
+
+		public IEnumerator<PackageDetails> GetEnumerator()
+		{
+            return m_cachedPackages.GetEnumerator(); 
+        }
 
 		IEnumerator IEnumerable.GetEnumerator()
 		{
@@ -33,6 +33,7 @@ namespace upmtool
 		}
 
 		IGithubService m_githubService;
+        List<PackageDetails> m_cachedPackages = new List<PackageDetails>();
 	}
 }
 
