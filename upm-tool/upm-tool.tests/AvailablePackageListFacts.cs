@@ -34,18 +34,25 @@ namespace upmtool.tests
 	[TestFixture()]
 	public class AvailablePackageListFacts
 	{
-		Mock<IGithubService> CreateGithubServiceStub(IEnumerable<GithubDirectoryContent> stubPackages) 
+		IGithubService CreateGithubServiceStub(IEnumerable<GithubDirectoryContent> stubGithubFiles) 
 		{
 			var stubGithub = new Mock<IGithubService> ();
-			stubGithub.Setup (gitService => gitService.GetDirectoryContents (It.IsAny<string>()))
-				.Returns (stubPackages);
-			return stubGithub;
+			stubGithub.Setup(
+                gitService => gitService.GetDirectoryContents(It.IsAny<string>()))
+				.Returns (stubGithubFiles);
+			return stubGithub.Object;
 		}
+
+        PackageDetails CreateStubPackage(string name) {
+            return new PackageDetails  {
+                Name = name,
+            };
+        }
 
 		[Test()]
 		public void Count_NoPackages_EmptyList ()
 		{
-			var emptyGithubRepo = CreateGithubServiceStub (new GithubDirectoryContent[] { }).Object;
+			var emptyGithubRepo = CreateGithubServiceStub (new GithubDirectoryContent[] { });
 
 			var packageList = new AvailablePackageList(emptyGithubRepo);
 
@@ -53,18 +60,20 @@ namespace upmtool.tests
 		}
 
 		[Test()]
-		public void Count_OnePackage_CountOf1() 
+		public void IEnumerable_OnePackage_IsOnlyPackage() 
 		{
-			var samplePackage = new GithubDirectoryContent {
+            var stubPackage = CreateStubPackage("example");
+			var stubGithubFile = new GithubDirectoryContent {
 				Type = "file",
-				Name = "example.upm",
+				Name = stubPackage.Name + ".upm",
 			};
 			var stubGithub 
-				= CreateGithubServiceStub (new GithubDirectoryContent[] { samplePackage }).Object;
+				= CreateGithubServiceStub (new GithubDirectoryContent[] { stubGithubFile });
 
 			var packageList = new AvailablePackageList(stubGithub);
 
-			Assert.AreEqual(packageList.Count(), 1);
+            CollectionAssert.AreEqual(packageList as IEnumerable<PackageDetails>, 
+                                      new PackageDetails[] { stubPackage });
 		}
 
 		[Test]
@@ -75,7 +84,7 @@ namespace upmtool.tests
 				Name = "ignore.me",
 			};
 			var stubGithub 
-				= CreateGithubServiceStub (new GithubDirectoryContent[] { ignoredPackage }).Object;
+				= CreateGithubServiceStub (new GithubDirectoryContent[] { ignoredPackage });
 
 			var packageList = new AvailablePackageList(stubGithub);
 

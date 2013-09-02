@@ -5,20 +5,24 @@ using System.Linq;
 
 namespace upmtool
 {
-	public class AvailablePackageList : IEnumerable<object>
+	public class AvailablePackageList : IEnumerable<PackageDetails>
 	{
 		public AvailablePackageList (IGithubService github)
 		{
 			m_githubService = github;
 		}
 
-		public IEnumerator<object> GetEnumerator()
+		public IEnumerator<PackageDetails> GetEnumerator()
 		{
 			var contents = m_githubService.GetDirectoryContents ("packages");
-			var res = new List<object> ();
+			var res = new List<PackageDetails> ();
             var availablePackages = contents.Where(pkg => pkg.Name.ToLower().EndsWith(".upm"));
+
 			foreach (var file in availablePackages) {
-				res.Add (null);
+                string packageName = file.Name.Substring(0, file.Name.Length - 4);
+				res.Add (new PackageDetails {
+                        Name = packageName,
+                    });
 			}
 			return res.GetEnumerator();
 		}
