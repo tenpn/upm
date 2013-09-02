@@ -1,17 +1,20 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="upm-tool.tests/PackageListFacts.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="upm-tool.tests/AvailablePackageListFacts.cs">
     <Files>
-      <File FileName="upm-tool/Program.cs" Line="13" Column="1" />
-      <File FileName="upm-tool.tests/Test.cs" Line="12" Column="4" />
-      <File FileName="upm-tool.tests/PackageSearchCommandFacts.cs" Line="8" Column="3" />
-      <File FileName="upm-tool.tests/PackageListFacts.cs" Line="16" Column="2" />
-      <File FileName="upm-tool/PackageList.cs" Line="7" Column="4" />
+      <File FileName="upm-tool/GithubPackagesStore.cs" Line="1" Column="1" />
+      <File FileName="upm-tool/Program.cs" Line="1" Column="1" />
+      <File FileName="upm-tool/GithubService.cs" Line="1" Column="1" />
+      <File FileName="upm-tool/IGithubService.cs" Line="1" Column="1" />
+      <File FileName="upm-tool.tests/AvailablePackageListFacts.cs" Line="51" Column="4" />
+      <File FileName="upm-tool/AvailablePackageList.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="upm-tool" expanded="True" selected="True" />
+        <State expanded="True" selected="True">
+          <Node name="upm-tool" expanded="True">
+            <Node name="References" expanded="True" />
+          </Node>
           <Node name="upm-tool.tests" expanded="True">
             <Node name="References" expanded="True" />
           </Node>
