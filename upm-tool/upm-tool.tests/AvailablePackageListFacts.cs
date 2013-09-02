@@ -43,7 +43,7 @@ namespace upmtool.tests
 			return stubGithub.Object;
 		}
 
-        PackageDetails CreateStubPackage(string name) {
+        PackageDetails CreatePackage(string name) {
             return new PackageDetails  {
                 Name = name,
             };
@@ -62,7 +62,7 @@ namespace upmtool.tests
 		[Test()]
 		public void IEnumerable_OnePackage_IsOnlyPackage() 
 		{
-            var stubPackage = CreateStubPackage("example");
+            var stubPackage = CreatePackage("example");
 			var stubGithubFile = new GithubDirectoryContent {
 				Type = "file",
 				Name = stubPackage.Name + ".upm",
@@ -74,7 +74,6 @@ namespace upmtool.tests
 
             var idealPackageList = new PackageDetails[] { stubPackage };
             CollectionAssert.AreEqual(packageList, idealPackageList);
-                                      
 		}
 
 		[Test]
