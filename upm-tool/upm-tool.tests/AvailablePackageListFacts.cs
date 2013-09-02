@@ -43,7 +43,7 @@ namespace upmtool.tests
 		}
 
 		[Test()]
-		public void AsIEnumerable_NoPackages_EmptyList ()
+		public void Count_NoPackages_EmptyList ()
 		{
 			var emptyGithubRepo = CreateGithubServiceStub (new GithubDirectoryContent[] { }).Object;
 
@@ -53,7 +53,7 @@ namespace upmtool.tests
 		}
 
 		[Test()]
-		public void AsEnumerable_OnePackage_CountOf1() 
+		public void Count_OnePackage_CountOf1() 
 		{
 			var samplePackage = new GithubDirectoryContent {
 				Type = "file",
@@ -65,6 +65,21 @@ namespace upmtool.tests
 			var packageList = new AvailablePackageList(stubGithub);
 
 			Assert.AreEqual(packageList.Count(), 1);
+		}
+
+		[Test]
+		public void Count_OneNonUPMFile_CountOf0() 
+		{
+			var ignoredPackage = new GithubDirectoryContent {
+				Type = "file",
+				Name = "ignore.me",
+			};
+			var stubGithub 
+				= CreateGithubServiceStub (new GithubDirectoryContent[] { ignoredPackage }).Object;
+
+			var packageList = new AvailablePackageList(stubGithub);
+
+			Assert.AreEqual(packageList.Count(), 0);
 		}
 	}
 }

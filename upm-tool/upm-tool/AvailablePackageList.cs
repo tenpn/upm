@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace upmtool
 {
@@ -15,7 +16,8 @@ namespace upmtool
 		{
 			var contents = m_githubService.GetDirectoryContents ("packages");
 			var res = new List<object> ();
-			foreach (var file in contents) {
+            var availablePackages = contents.Where(pkg => pkg.Name.ToLower().EndsWith(".upm"));
+			foreach (var file in availablePackages) {
 				res.Add (null);
 			}
 			return res.GetEnumerator();
