@@ -56,7 +56,7 @@ namespace upmtool.tests
 
 			var packageList = new AvailablePackageList(emptyGithubRepo);
 
-			Assert.AreEqual(packageList.Count(), 0);
+			CollectionAssert.IsEmpty(packageList);
 		}
 
 		[Test()]
@@ -72,12 +72,13 @@ namespace upmtool.tests
 
 			var packageList = new AvailablePackageList(stubGithub);
 
-            CollectionAssert.AreEqual(packageList as IEnumerable<PackageDetails>, 
-                                      new PackageDetails[] { stubPackage });
+            var idealPackageList = new PackageDetails[] { stubPackage };
+            CollectionAssert.AreEqual(packageList, idealPackageList);
+                                      
 		}
 
 		[Test]
-		public void Count_OneNonUPMFile_CountOf0() 
+		public void IEnumerable_OneNonUPMFile_IsEmptyCollection() 
 		{
 			var ignoredPackage = new GithubDirectoryContent {
 				Type = "file",
@@ -88,7 +89,7 @@ namespace upmtool.tests
 
 			var packageList = new AvailablePackageList(stubGithub);
 
-			Assert.AreEqual(packageList.Count(), 0);
+            CollectionAssert.IsEmpty(packageList);
 		}
 	}
 }
