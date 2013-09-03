@@ -43,13 +43,13 @@ namespace upmtool.tests
 			return stubGithub.Object;
 		}
 
-        PackageDetails CreatePackageWithName(string name) {
+        public static PackageDetails CreatePackageWithName(string name) {
             return new PackageDetails  {
                 Name = name,
             };
         }
 
-        IEnumerable<PackageDetails> CreateAvailablePackageList(
+        public static IEnumerable<PackageDetails> CreateAvailablePackageList(
             IGithubService githubService) {
 
             return AvailablePackageList.FetchPackageList(githubService);
@@ -124,16 +124,32 @@ namespace upmtool.tests
             Assert.IsNull(foundPackage);
         }
 
+        private struct FindPackageByNameTester
+        {
+            public FindPackageByNameTester(string packageName)
+            {
+                TargetPackage = CreatePackageWithName(packageName);
+                PackageList = new PackageDetails[] { TargetPackage };
+            }
+
+            public IEnumerable<PackageDetails> PackageList;
+            public PackageDetails TargetPackage;
+
+            public void AssertFoundPackageIsTarget(PackageDetails packageFound)
+            {
+                Assert.AreEqual(packageFound, TargetPackage);
+            }
+        }
+
         [Test]
         public void FindPackageByName_NameOfOnlyPackage_ReturnsPackage() 
         {
             var targetPackageName = "foo";
-            var targetPackage = CreatePackageWithName(targetPackageName);
-            var packageList = new PackageDetails[] { targetPackage };
+            var tester = new FindPackageByNameTester(targetPackageName);
 
-            var foundPackage = packageList.FindPackageByName(targetPackageName);
+            var foundPackage = tester.PackageList.FindPackageByName(targetPackageName);
 
-            Assert.AreEqual(targetPackage, foundPackage);
+            tester.AssertFoundPackageIsTarget(foundPackage);
         }
 
         [Test]
@@ -149,6 +165,54 @@ namespace upmtool.tests
             var foundPackage = packageList.FindPackageByName(targetPackageName);
 
             Assert.AreEqual(targetPackage, foundPackage);
+        }
+
+        [Test]
+        public void FindPackageByName_WildcardAsterix_ReturnsFirstPackage()
+        {
+            var targetPackageName = "foo";
+            var tester = new FindPackageByNameTester(targetPackageName);
+            var wildcardSearch = "*";
+
+            var foundPackage = tester.PackageList.FindPackageByName(wildcardSearch);
+
+            tester.AssertFoundPackageIsTarget(foundPackage);
+        }
+
+        [Test]
+        public void FindPackageByName_WildcardMatchesAnyStart_FindsMatchingPackage() 
+        {
+            var targetPackageName = "foobarr";
+            var tester = new FindPackageByNameTester(targetPackageName);
+            var wildcardAtStart = "*barr";
+
+            var foundPackage = tester.PackageList.FindPackageByName(wildcardAtStart);
+
+            tester.AssertFoundPackageIsTarget(foundPackage);
+        }
+
+        [Test]
+        public void FindPackageByName_SearchWithNameInWrongCase_FindsCorrectPackage()
+        {
+            var targetPackageName = "foobarr";
+            var tester = new FindPackageByNameTester(targetPackageName);
+            var uppercaseName = targetPackageName.ToUpper();
+
+            var foundPackage = tester.PackageList.FindPackageByName(uppercaseName);
+
+            tester.AssertFoundPackageIsTarget(foundPackage);
+        }
+
+        [Test]
+        public void FindPackageByName_QueryCharacterMatchesSingleChar_FindsCorrectPackage() 
+        {
+            var targetPackageName = "foobarr";
+            var tester = new FindPackageByNameTester(targetPackageName);
+            var querySearch = "foo?arr";
+
+            var foundPackage = tester.PackageList.FindPackageByName(querySearch);
+
+            tester.AssertFoundPackageIsTarget(foundPackage);
         }
 	}
 }

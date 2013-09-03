@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace upmtool
 {
@@ -27,7 +28,13 @@ namespace upmtool
         public static PackageDetails FindPackageByName(
             this IEnumerable<PackageDetails> packages, string searchTerms) 
         {
-            return packages.FirstOrDefault(pkg => pkg.Name == searchTerms);
+            var searchRegexPattern = "^" + Regex.Escape(searchTerms)
+                .Replace(@"\*", ".*")
+                .Replace(@"\?", ".") 
+                + "$";
+            var searcher = new Regex(searchRegexPattern, RegexOptions.IgnoreCase);
+
+            return packages.FirstOrDefault(pkg => searcher.IsMatch(pkg.Name));
         }
 	}
 }
