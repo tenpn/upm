@@ -6,10 +6,21 @@ namespace upmtool.tests
     [TestFixture]
     public class PackageFileParserFacts
     {
+        TextReader CreatePackageFile(string name)
+        {
+            return CreatePackageFile(name, "version", "comment");
+        }
+
         TextReader CreatePackageFile(string name, string version)
         {
+            return CreatePackageFile(name, version, "comment");
+        }
+
+        TextReader CreatePackageFile(string name, string version, string summary)
+        {
             string file = "name: " + name + "\n"
-                + "version: " + version;
+                + "version: " + version + "\n"
+                + "summary: |\n" + summary;
             return new StringReader(file);
         }
 
@@ -17,7 +28,7 @@ namespace upmtool.tests
         public void Parse_ValidPackageFile_StoresName()
         {
             string packageName = "foo";
-            var packageFile = CreatePackageFile(packageName, "1");
+            var packageFile = CreatePackageFile(packageName);
             
             var parsedPackage = PackageFileParser.Parse(packageFile);
 
