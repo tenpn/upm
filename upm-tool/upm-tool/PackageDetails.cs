@@ -5,6 +5,7 @@ namespace upmtool {
     public class PackageDetails  
     {
         public string Name;
+        public string VersionString;
 
         public override string ToString() { return Name; }
 
