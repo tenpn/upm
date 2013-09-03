@@ -8,6 +8,7 @@ namespace upmtool
 {
 	public static class AvailablePackageList 
 	{
+        // fetches packages from github, converts to usable details
 		public static IEnumerable<PackageDetails> FetchPackageList(IGithubService github)
 		{
 			var contents = github.GetDirectoryContents ("packages");
@@ -25,6 +26,7 @@ namespace upmtool
             return cachedPackages;
 		}
 
+        // matches * and ? as expected
         public static PackageDetails FindPackageByName(
             this IEnumerable<PackageDetails> packages, string searchTerms) 
         {
