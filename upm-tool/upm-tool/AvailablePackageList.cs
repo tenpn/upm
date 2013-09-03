@@ -24,9 +24,10 @@ namespace upmtool
             return cachedPackages;
 		}
 
-        public static PackageDetails FindPackageByName(string searchTerms) 
+        public static PackageDetails FindPackageByName(
+            this IEnumerable<PackageDetails> packages, string searchTerms) 
         {
-            return null;
+            return packages.FirstOrDefault(pkg => pkg.Name == searchTerms);
         }
 	}
 }

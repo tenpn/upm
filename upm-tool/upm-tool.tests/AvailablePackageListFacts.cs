@@ -43,7 +43,7 @@ namespace upmtool.tests
 			return stubGithub.Object;
 		}
 
-        PackageDetails CreatePackage(string name) {
+        PackageDetails CreatePackageWithName(string name) {
             return new PackageDetails  {
                 Name = name,
             };
@@ -68,7 +68,7 @@ namespace upmtool.tests
 		[Test()]
 		public void IEnumerable_OnePackage_IsOnlyPackage() 
 		{
-            var stubPackage = CreatePackage("example");
+            var stubPackage = CreatePackageWithName("example");
 			var stubGithubFile = new GithubDirectoryContent {
 				Type = "file",
 				Name = stubPackage.Name + ".upm",
@@ -115,19 +115,40 @@ namespace upmtool.tests
         }
 
         [Test]
-        public void FindPackageByName_WildcardWithNoPackage_ReturnsNull() {
-            //var stubGithub 
-				//= CreateGithubServiceStub (new GithubDirectoryContent[] { });
-            //var packageList = CreateAvailablePackageList(stubGithub);
+        public void FindPackageByName_WildcardWithNoPackage_ReturnsNull() 
+        {
+            var packageList = new PackageDetails[] { };
 
-            PackageDetails foundPackage = null; //packageList.FindPackageByName("*");
+            var foundPackage = packageList.FindPackageByName("*");
 
             Assert.IsNull(foundPackage);
         }
 
         [Test]
-        public void FindPackageByName_NameOfOnlyPackage_ReturnsPackage() {
-            
+        public void FindPackageByName_NameOfOnlyPackage_ReturnsPackage() 
+        {
+            var targetPackageName = "foo";
+            var targetPackage = CreatePackageWithName(targetPackageName);
+            var packageList = new PackageDetails[] { targetPackage };
+
+            var foundPackage = packageList.FindPackageByName(targetPackageName);
+
+            Assert.AreEqual(targetPackage, foundPackage);
+        }
+
+        [Test]
+        public void FindPackageByName_NameOfOneOfManyPackages_ReturnsNamedPackage() 
+        {
+            var targetPackageName = "foo";
+            var targetPackage = CreatePackageWithName(targetPackageName);
+            var packageList = new PackageDetails[] { 
+                CreatePackageWithName("making up the numbers"),
+                targetPackage
+            };
+
+            var foundPackage = packageList.FindPackageByName(targetPackageName);
+
+            Assert.AreEqual(targetPackage, foundPackage);
         }
 	}
 }
