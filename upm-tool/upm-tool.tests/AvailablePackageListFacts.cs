@@ -56,17 +56,17 @@ namespace upmtool.tests
         }
 
 		[Test()]
-		public void Count_NoPackages_EmptyList ()
+		public void FetchPackageList_NoPackages_EmptyList ()
 		{
 			var emptyGithubRepo = CreateGithubServiceStub (new GithubDirectoryContent[] { });
 
-			var packageList = CreateAvailablePackageList(emptyGithubRepo);
+			var packageList = AvailablePackageList.FetchPackageList(emptyGithubRepo);
 
 			CollectionAssert.IsEmpty(packageList);
 		}
 
 		[Test()]
-		public void IEnumerable_OnePackage_IsOnlyPackage() 
+		public void FetchPackageList_OnePackage_IsOnlyPackage() 
 		{
             var stubPackage = CreatePackageWithName("example");
 			var stubGithubFile = new GithubDirectoryContent {
@@ -76,14 +76,15 @@ namespace upmtool.tests
 			var stubGithub 
 				= CreateGithubServiceStub (new GithubDirectoryContent[] { stubGithubFile });
 
-			var packageList = CreateAvailablePackageList(stubGithub);
+			var packageList = AvailablePackageList.FetchPackageList(stubGithub);
 
             var idealPackageList = new PackageDetails[] { stubPackage };
             CollectionAssert.AreEqual(packageList, idealPackageList);
 		}
 
+
 		[Test]
-		public void IEnumerable_OneNonUPMFile_IsEmptyCollection() 
+		public void FetchPackageList_OneNonUPMFile_IsEmptyCollection() 
 		{
 			var ignoredPackage = new GithubDirectoryContent {
 				Type = "file",
@@ -92,7 +93,7 @@ namespace upmtool.tests
 			var stubGithub 
 				= CreateGithubServiceStub (new GithubDirectoryContent[] { ignoredPackage });
 
-			var packageList = CreateAvailablePackageList(stubGithub);
+			var packageList = AvailablePackageList.FetchPackageList(stubGithub);
 
             CollectionAssert.IsEmpty(packageList);
 		}
