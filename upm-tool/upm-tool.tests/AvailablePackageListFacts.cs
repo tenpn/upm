@@ -49,12 +49,18 @@ namespace upmtool.tests
             };
         }
 
+        IEnumerable<PackageDetails> CreateAvailablePackageList(
+            IGithubService githubService) {
+
+            return AvailablePackageList.FetchPackageList(githubService);
+        }
+
 		[Test()]
 		public void Count_NoPackages_EmptyList ()
 		{
 			var emptyGithubRepo = CreateGithubServiceStub (new GithubDirectoryContent[] { });
 
-			var packageList = new AvailablePackageList(emptyGithubRepo);
+			var packageList = CreateAvailablePackageList(emptyGithubRepo);
 
 			CollectionAssert.IsEmpty(packageList);
 		}
@@ -70,7 +76,7 @@ namespace upmtool.tests
 			var stubGithub 
 				= CreateGithubServiceStub (new GithubDirectoryContent[] { stubGithubFile });
 
-			var packageList = new AvailablePackageList(stubGithub);
+			var packageList = CreateAvailablePackageList(stubGithub);
 
             var idealPackageList = new PackageDetails[] { stubPackage };
             CollectionAssert.AreEqual(packageList, idealPackageList);
@@ -86,7 +92,7 @@ namespace upmtool.tests
 			var stubGithub 
 				= CreateGithubServiceStub (new GithubDirectoryContent[] { ignoredPackage });
 
-			var packageList = new AvailablePackageList(stubGithub);
+			var packageList = CreateAvailablePackageList(stubGithub);
 
             CollectionAssert.IsEmpty(packageList);
 		}
@@ -99,13 +105,29 @@ namespace upmtool.tests
 			mockGithub.Setup(
                 gitService => gitService.GetDirectoryContents(It.IsAny<string>()))
 				.Returns (new GithubDirectoryContent[] { });
-			var packageList = new AvailablePackageList(mockGithub.Object);
+			var packageList = CreateAvailablePackageList(mockGithub.Object);
             
             packageList.GetEnumerator();
             packageList.GetEnumerator();
 
             mockGithub.Verify(service => service.GetDirectoryContents(It.IsAny<string>()),
                               Times.Exactly(1));
+        }
+
+        [Test]
+        public void FindPackageByName_WildcardWithNoPackage_ReturnsNull() {
+            //var stubGithub 
+				//= CreateGithubServiceStub (new GithubDirectoryContent[] { });
+            //var packageList = CreateAvailablePackageList(stubGithub);
+
+            PackageDetails foundPackage = null; //packageList.FindPackageByName("*");
+
+            Assert.IsNull(foundPackage);
+        }
+
+        [Test]
+        public void FindPackageByName_NameOfOnlyPackage_ReturnsPackage() {
+            
         }
 	}
 }
