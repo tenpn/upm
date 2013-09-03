@@ -6,6 +6,7 @@ namespace upmtool {
     {
         public string Name;
         public string VersionString;
+        public string Summary;
 
         public override string ToString() { return Name; }
 

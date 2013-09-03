@@ -1,5 +1,6 @@
 using System.IO;
 using NUnit.Framework;
+using System.Linq;
 
 namespace upmtool.tests
 {
@@ -20,7 +21,10 @@ namespace upmtool.tests
         {
             string file = "name: " + name + "\n"
                 + "version: " + version + "\n"
-                + "summary: |\n" + summary;
+                // summary is a literal indented  yaml block
+                + "summary: |\n" 
+                + string.Join("\n", 
+                              summary.Split('\n').Select(summaryLine => " " + summaryLine));
             return new StringReader(file);
         }
 
@@ -45,5 +49,28 @@ namespace upmtool.tests
 
             Assert.AreEqual(targetVersionString, parsedPackage.VersionString);
         }
+
+        [Test]
+        public void Parse_ValidPackageFileWithSingleLineSummary_StoresSummary() 
+        {
+            var targetSummary = "summarising our package";
+            var packageFile = CreatePackageFile("name", "version", targetSummary);
+
+            var parsedPackage = PackageFileParser.Parse(packageFile);
+
+            Assert.AreEqual(targetSummary, parsedPackage.Summary);
+        }
+
+        [Test]
+        public void Parse_ValidPackageFileWithMultiLineSummary_StoresSummary() 
+        {
+            var targetSummary = "summarising our package\nacross multiple lines\nhere";
+            var packageFile = CreatePackageFile("name", "version", targetSummary);
+
+            var parsedPackage = PackageFileParser.Parse(packageFile);
+
+            Assert.AreEqual(targetSummary, parsedPackage.Summary);
+        }
+        
     }
 }
