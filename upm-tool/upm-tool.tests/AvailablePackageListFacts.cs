@@ -34,13 +34,13 @@ namespace upmtool.tests
 	[TestFixture()]
 	public class AvailablePackageListFacts
 	{
-		IGithubService CreateGithubServiceStub(IEnumerable<GithubDirectoryContent> stubGithubFiles) 
+		IRemoteRepositoryService CreateRemoteRepositoryServiceStub(IEnumerable<GithubDirectoryContent> samplePackageFiles) 
 		{
-			var stubGithub = new Mock<IGithubService> ();
-			stubGithub.Setup(
-                gitService => gitService.GetDirectoryContents(It.IsAny<string>()))
-				.Returns (stubGithubFiles);
-			return stubGithub.Object;
+			var stubRepo = new Mock<IRemoteRepositoryService> ();
+			stubRepo.Setup(
+                repo => repo.GetDirectoryContents(It.IsAny<string>()))
+				.Returns (samplePackageFiles);
+			return stubRepo.Object;
 		}
 
         public static PackageDetails CreatePackageWithName(string name) {
@@ -50,7 +50,7 @@ namespace upmtool.tests
         }
 
         public static IEnumerable<PackageDetails> CreateAvailablePackageList(
-            IGithubService githubService) {
+            IRemoteRepositoryService githubService) {
 
             return AvailablePackageList.FetchPackageList(githubService);
         }
@@ -58,7 +58,7 @@ namespace upmtool.tests
 		[Test()]
 		public void FetchPackageList_NoPackages_EmptyList ()
 		{
-			var emptyGithubRepo = CreateGithubServiceStub (new GithubDirectoryContent[] { });
+			var emptyGithubRepo = CreateRemoteRepositoryServiceStub (new GithubDirectoryContent[] { });
 
 			var packageList = AvailablePackageList.FetchPackageList(emptyGithubRepo);
 
@@ -74,7 +74,7 @@ namespace upmtool.tests
 				Name = stubPackage.Name + ".upm",
 			};
 			var stubGithub 
-				= CreateGithubServiceStub (new GithubDirectoryContent[] { stubGithubFile });
+				= CreateRemoteRepositoryServiceStub (new GithubDirectoryContent[] { stubGithubFile });
 
 			var packageList = AvailablePackageList.FetchPackageList(stubGithub);
 
@@ -91,7 +91,7 @@ namespace upmtool.tests
 				Name = "ignore.me",
 			};
 			var stubGithub 
-				= CreateGithubServiceStub (new GithubDirectoryContent[] { ignoredPackage });
+				= CreateRemoteRepositoryServiceStub (new GithubDirectoryContent[] { ignoredPackage });
 
 			var packageList = AvailablePackageList.FetchPackageList(stubGithub);
 
@@ -102,7 +102,7 @@ namespace upmtool.tests
         [Test]
         public void IEnumerable_CalledTwice_OnlyCallsToGithubOnce() 
         {
-            var mockGithub = new Mock<IGithubService> ();
+            var mockGithub = new Mock<IRemoteRepositoryService> ();
 			mockGithub.Setup(
                 gitService => gitService.GetDirectoryContents(It.IsAny<string>()))
 				.Returns (new GithubDirectoryContent[] { });

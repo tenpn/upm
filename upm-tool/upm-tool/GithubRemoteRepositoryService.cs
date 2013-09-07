@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace upmtool
 {
-	public class GithubService : IGithubService
+	public class GithubRemoteRepositoryService : IRemoteRepositoryService
 	{
 		public IEnumerable<GithubDirectoryContent> GetDirectoryContents(string dirName) 
 		{

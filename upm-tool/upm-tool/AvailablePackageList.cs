@@ -9,7 +9,7 @@ namespace upmtool
 	public static class AvailablePackageList 
 	{
         // fetches packages from github, converts to usable details
-		public static IEnumerable<PackageDetails> FetchPackageList(IGithubService github)
+		public static IEnumerable<PackageDetails> FetchPackageList(IRemoteRepositoryService github)
 		{
 			var contents = github.GetDirectoryContents ("packages");
             var availablePackages = contents.Where(pkg => pkg.Name.ToLower().EndsWith(".upm"));

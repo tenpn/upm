@@ -9,7 +9,7 @@ namespace upmtool
 		public string Name { get; set; }
 	}
 
-	public interface IGithubService
+	public interface IRemoteRepositoryService
 	{
 		IEnumerable<GithubDirectoryContent> GetDirectoryContents(string dirName);
 	}
